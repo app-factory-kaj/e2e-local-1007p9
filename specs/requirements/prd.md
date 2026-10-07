@@ -2,7 +2,7 @@
 
 ## Problem Statement
 
-Teams building and validating services on this platform need a minimal, known-good reference service to exercise end-to-end conventions (project layout, build, API contract, deployment) without the complexity of a real product. Today there is no small, canonical HTTP service that demonstrates these conventions end to end.
+Teams building and validating services on this platform need a minimal, known-good reference service to exercise end-to-end conventions (project layout, build, API contract, deployment) without the complexity of a real product. Today there is no small, canonical HTTP service that demonstrates these conventions end to end. E2E marker p9-1007p9.
 
 ## Solution
 
