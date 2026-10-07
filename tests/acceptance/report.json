@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-07T00:00:00Z",
+  "commit": "507807231dac99ce61b78435b9661b7286ce4b47",
+  "baseUrl": "http://development-default.openchoreoapis.localhost:19080/e2e-local-1007p9-greeter-http",
+  "isolation": "stateless GET-only API with no auth and no persistence; each scenario issues its own request and asserts only on that response",
+  "scenarios": [
+    {
+      "feature": "Greeting",
+      "featureFile": "specs/validation/acceptance/greeting.feature",
+      "line": 6,
+      "rule": "Calling /hello with a name returns a greeting that includes it",
+      "scenario": "Greeting a named caller",
+      "tags": ["@story-1"],
+      "outcome": "passed",
+      "steps": [
+        { "text": "the greeter service is running", "keyword": "Given",
+          "command": "curl -s -o /dev/null -w '%{http_code}' http://development-default.openchoreoapis.localhost:19080/e2e-local-1007p9-greeter-http/hello",
+          "exit": 0, "observed": "200" },
+        { "text": "an API Consumer calls \"GET /hello?name=Alice\"", "keyword": "When",
+          "command": "curl -s http://development-default.openchoreoapis.localhost:19080/e2e-local-1007p9-greeter-http/hello?name=Alice -o /tmp/r1.json -w 'status=%{http_code}'",
+          "exit": 0, "observed": "status=200, body={\"message\":\"Hello, Alice!\"}" },
+        { "text": "the response is a JSON greeting containing \"Alice\"", "keyword": "Then",
+          "command": "node -e 'const d=require(\"/tmp/r1.json\"); process.exit(typeof d.message===\"string\" && d.message.includes(\"Alice\") ? 0 : 1)'",
+          "exit": 0, "observed": "message=\"Hello, Alice!\"" }
+      ],
+      "evidence": {
+        "network": [{ "method": "GET", "url": "/hello?name=Alice", "status": 200 }],
+        "console": []
+      }
+    },
+    {
+      "feature": "Greeting",
+      "featureFile": "specs/validation/acceptance/greeting.feature",
+      "line": 14,
+      "rule": "Calling /hello without a name still returns a generic greeting",
+      "scenario": "Greeting with no name provided",
+      "tags": ["@story-2"],
+      "outcome": "passed",
+      "steps": [
+        { "text": "the greeter service is running", "keyword": "Given",
+          "command": "curl -s -o /dev/null -w '%{http_code}' http://development-default.openchoreoapis.localhost:19080/e2e-local-1007p9-greeter-http/hello",
+          "exit": 0, "observed": "200" },
+        { "text": "an API Consumer calls \"GET /hello\" with no \"name\" parameter", "keyword": "When",
+          "command": "curl -s http://development-default.openchoreoapis.localhost:19080/e2e-local-1007p9-greeter-http/hello -o /tmp/r2.json -w 'status=%{http_code}'",
+          "exit": 0, "observed": "status=200, body={\"message\":\"Hello, World!\"}" },
+        { "text": "the response is a JSON greeting that does not depend on any name", "keyword": "Then",
+          "command": "node -e 'const d=require(\"/tmp/r2.json\"); process.exit(d.message===\"Hello, World!\" ? 0 : 1)'",
+          "exit": 0, "observed": "message=\"Hello, World!\"" }
+      ],
+      "evidence": {
+        "network": [{ "method": "GET", "url": "/hello", "status": 200 }],
+        "console": []
+      }
+    },
+    {
+      "feature": "Greeting",
+      "featureFile": "specs/validation/acceptance/greeting.feature",
+      "line": 19,
+      "rule": "Calling /hello without a name still returns a generic greeting",
+      "scenario": "Greeting with an empty name provided",
+      "tags": ["@story-2"],
+      "outcome": "passed",
+      "steps": [
+        { "text": "the greeter service is running", "keyword": "Given",
+          "command": "curl -s -o /dev/null -w '%{http_code}' http://development-default.openchoreoapis.localhost:19080/e2e-local-1007p9-greeter-http/hello",
+          "exit": 0, "observed": "200" },
+        { "text": "an API Consumer calls \"GET /hello?name=\"", "keyword": "When",
+          "command": "curl -s 'http://development-default.openchoreoapis.localhost:19080/e2e-local-1007p9-greeter-http/hello?name=' -o /tmp/r3.json -w 'status=%{http_code}'",
+          "exit": 0, "observed": "status=200, body={\"message\":\"Hello, World!\"}" },
+        { "text": "the response is a JSON greeting that does not depend on any name", "keyword": "Then",
+          "command": "node -e 'const d=require(\"/tmp/r3.json\"); process.exit(d.message===\"Hello, World!\" ? 0 : 1)'",
+          "exit": 0, "observed": "message=\"Hello, World!\"" }
+      ],
+      "evidence": {
+        "network": [{ "method": "GET", "url": "/hello?name=", "status": 200 }],
+        "console": []
+      }
+    }
+  ]
+}
